@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package resolver.v1;
+
+option go_package = "github.com/Friend-zva/dns-application/resolver/v1;resolverv1";
+
+service Resolver {
+  rpc AddDNSServer(AddDNSServerRequest) returns (AddDNSServerResponse);
+  rpc DeleteDNSServer(DeleteDNSServerRequest) returns (DeleteDNSServerResponse);
+  rpc GetDNSServers(GetDNSServersRequest) returns (GetDNSServersResponse);
+}
+
+message AddDNSServerRequest {
+  string name = 1;
+}
+message AddDNSServerResponse {
+  string reply = 1;
+}
+
+message DeleteDNSServerRequest {
+  string name = 1;
+}
+message DeleteDNSServerResponse {
+  string reply = 1;
+}
+
+message GetDNSServersRequest {}
+message GetDNSServersResponse {
+  repeated string names = 1;
+}
