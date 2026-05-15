@@ -1,0 +1,62 @@
+name: Demo Application
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["**"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formatter:
+    name: Formatter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: ./.github/actions/setup-go
+
+      - name: Run gofmt
+        run: gofmt -d .
+
+  linter:
+    name: Linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: ./.github/actions/setup-go
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+
+  tests:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: ./.github/actions/setup-go
+
+      - name: Build
+        run: |
+          go build -v -o ./resolver resolver/cmd/app.go
+          go build -v -o ./cli cli/cmd/app.go
+
+      - name: Test
+        run: go test -v ./...
