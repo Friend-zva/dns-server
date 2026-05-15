@@ -3,6 +3,7 @@ package cobracli
 import (
 	"context"
 	"fmt"
+	"time"
 
 	cobra "github.com/spf13/cobra"
 
@@ -71,8 +72,10 @@ func (h *handler) setupCommands() {
 
 func (h *handler) addServer(cmd *cobra.Command, args []string) error {
 	ip := args[0]
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	msg, err := h.usecase.AddDNSServer(context.Background(), ip)
+	msg, err := h.usecase.AddDNSServer(ctx, ip)
 	if err != nil {
 		return fmt.Errorf("cannot add server: %w", err)
 	}
@@ -83,8 +86,10 @@ func (h *handler) addServer(cmd *cobra.Command, args []string) error {
 
 func (h *handler) deleteServer(cmd *cobra.Command, args []string) error {
 	ip := args[0]
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	msg, err := h.usecase.DeleteDNSServer(context.Background(), ip)
+	msg, err := h.usecase.DeleteDNSServer(ctx, ip)
 	if err != nil {
 		return fmt.Errorf("cannot delete server: %w", err)
 	}
@@ -94,7 +99,10 @@ func (h *handler) deleteServer(cmd *cobra.Command, args []string) error {
 }
 
 func (h *handler) getServers(cmd *cobra.Command, args []string) error {
-	servers, err := h.usecase.GetDNSServers(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	servers, err := h.usecase.GetDNSServers(ctx)
 	if err != nil {
 		return fmt.Errorf("cannot get servers: %w", err)
 	}

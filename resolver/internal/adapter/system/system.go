@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	domain "github.com/Friend-zva/dns-application/resolver/internal/domain"
+	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 var pathResolv = "/etc/resolv.conf"
@@ -25,7 +26,7 @@ func NewOSDNSServerRepo(log *slog.Logger) *osDNSServerRepo {
 func (r *osDNSServerRepo) AddDNSServer(server domain.DNSServer) (string, error) {
 	file, err := os.OpenFile(pathResolv, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		return "", err
+		return "", apperror.ErrInternal.Wrap(err)
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
@@ -54,13 +55,13 @@ func (r *osDNSServerRepo) AddDNSServer(server domain.DNSServer) (string, error) 
 	}
 
 	if err := scanner.Err(); err != nil {
-		return "", err
+		return "", apperror.ErrInternal.Wrap(err)
 	}
 
 	if !serverExists {
 		_, err = file.WriteString("nameserver " + server.Name + "\n")
 		if err != nil {
-			return "", err
+			return "", apperror.ErrInternal.Wrap(err)
 		}
 		r.log.Info("server added", "name", server.Name)
 		return "Added", nil
@@ -74,7 +75,7 @@ func (r *osDNSServerRepo) AddDNSServer(server domain.DNSServer) (string, error) 
 func (r *osDNSServerRepo) DeleteDNSServer(server domain.DNSServer) (string, error) {
 	data, err := os.ReadFile(pathResolv)
 	if err != nil {
-		return "", err
+		return "", apperror.ErrInternal.Wrap(err)
 	}
 
 	lines := bytes.Split(data, []byte("\n"))
@@ -97,7 +98,7 @@ func (r *osDNSServerRepo) DeleteDNSServer(server domain.DNSServer) (string, erro
 	result := bytes.Join(output, []byte("\n"))
 	err = os.WriteFile(pathResolv, result, 0644)
 	if err != nil {
-		return "", err
+		return "", apperror.ErrInternal.Wrap(err)
 	}
 
 	if serverExists {
@@ -111,7 +112,7 @@ func (r *osDNSServerRepo) DeleteDNSServer(server domain.DNSServer) (string, erro
 func (r *osDNSServerRepo) GetDNSServers() ([]domain.DNSServer, error) {
 	data, err := os.ReadFile(pathResolv)
 	if err != nil {
-		return []domain.DNSServer{}, err
+		return []domain.DNSServer{}, apperror.ErrInternal.Wrap(err)
 	}
 
 	lines := bytes.Split(data, []byte("\n"))

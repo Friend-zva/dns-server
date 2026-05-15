@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	domain "github.com/Friend-zva/dns-application/resolver/internal/domain"
+	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 type DNSServerRepo interface {
@@ -25,7 +27,13 @@ func NewDNSServerUseCase(repo DNSServerRepo) *dnsServerUseCase {
 
 func (u *dnsServerUseCase) AddDNSServer(name string) (string, error) {
 	if name == "" {
-		return "", fmt.Errorf("empty name server")
+		err := fmt.Errorf("empty name server")
+		return "", apperror.ErrInvArgs.Wrap(err)
+	}
+
+	if net.ParseIP(name) == nil {
+		err := fmt.Errorf("invalid IP address")
+		return "", apperror.ErrInvArgs.Wrap(err)
 	}
 
 	server := domain.DNSServer{Name: name}
@@ -40,7 +48,13 @@ func (u *dnsServerUseCase) AddDNSServer(name string) (string, error) {
 
 func (u *dnsServerUseCase) DeleteDNSServer(name string) (string, error) {
 	if strings.TrimSpace(name) == "" {
-		return "", fmt.Errorf("empty name server")
+		err := fmt.Errorf("empty name server")
+		return "", apperror.ErrInvArgs.Wrap(err)
+	}
+
+	if net.ParseIP(name) == nil {
+		err := fmt.Errorf("invalid IP address")
+		return "", apperror.ErrInvArgs.Wrap(err)
 	}
 
 	server := domain.DNSServer{Name: name}

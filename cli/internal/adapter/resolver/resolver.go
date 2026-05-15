@@ -8,6 +8,7 @@ import (
 
 	domain "github.com/Friend-zva/dns-application/cli/internal/domain"
 	resolverpb "github.com/Friend-zva/dns-application/proto/resolver"
+	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 type client struct {
@@ -21,7 +22,7 @@ func NewClient(address string) (*client, error) {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrExternal.Wrap(err)
 	}
 
 	return &client{
