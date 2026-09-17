@@ -6,12 +6,12 @@ import (
 	"os"
 	"os/signal"
 
+	grpcserver "github.com/Friend-zva/dns-application/platform/grpcserver"
+	logger "github.com/Friend-zva/dns-application/platform/logger"
 	resolverpb "github.com/Friend-zva/dns-application/proto/resolver"
 	system "github.com/Friend-zva/dns-application/resolver/internal/adapter/system"
 	grpcH "github.com/Friend-zva/dns-application/resolver/internal/controller/grpc"
 	usecase "github.com/Friend-zva/dns-application/resolver/internal/usecase"
-	grpcserver "github.com/Friend-zva/dns-application/resolver/platform/grpcserver"
-	logger "github.com/Friend-zva/dns-application/resolver/platform/logger"
 )
 
 func run(ctx context.Context) error {

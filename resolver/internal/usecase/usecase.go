@@ -5,8 +5,8 @@ import (
 	"net"
 	"strings"
 
+	apperror "github.com/Friend-zva/dns-application/platform/apperror"
 	domain "github.com/Friend-zva/dns-application/resolver/internal/domain"
-	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 type DNSServerRepo interface {
