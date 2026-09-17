@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
+	apperror "github.com/Friend-zva/dns-application/platform/apperror"
 	domain "github.com/Friend-zva/dns-application/resolver/internal/domain"
-	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 var pathResolv = "/etc/resolv.conf"

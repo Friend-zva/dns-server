@@ -7,8 +7,8 @@ import (
 	insecure "google.golang.org/grpc/credentials/insecure"
 
 	domain "github.com/Friend-zva/dns-application/cli/internal/domain"
+	apperror "github.com/Friend-zva/dns-application/platform/apperror"
 	resolverpb "github.com/Friend-zva/dns-application/proto/resolver"
-	apperror "github.com/Friend-zva/dns-application/resolver/platform/apperror"
 )
 
 type client struct {
